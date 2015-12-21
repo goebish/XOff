@@ -29,11 +29,15 @@ typedef HRESULT(WINAPI *FnOff)(int);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	HINSTANCE hXInputDLL = LoadLibraryA("XInput1_3.dll");
-	if (hXInputDLL == NULL)
+	if (hXInputDLL == NULL) {
+		MessageBoxA(HWND_DESKTOP, "Couldn't load XInput1_3.dll", "XOff", MB_OK | MB_ICONERROR);
 		return 1;
+	}
 	FnOff pOff = FnOff(GetProcAddress(hXInputDLL, reinterpret_cast<char*>(103)));
-	if(pOff == NULL)
+	if(pOff == NULL) {
+		MessageBoxA(HWND_DESKTOP, "Couldn't find function address in XInput1_3.dll", "XOff", MB_OK | MB_ICONERROR);
 		return 1;
+	}
 	for(;;) {
 		Sleep(500);
 		for (short i = 0; i < XUSER_MAX_COUNT; ++i) {
